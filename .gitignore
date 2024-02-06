@@ -1,0 +1,14 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.cpython-310.pyc
+
+# Virtual environment
+venv/
+
+# Visual Studio Code settings
+.vscode/
+
+# Ignore migrations and database
+migrations/
+*.db

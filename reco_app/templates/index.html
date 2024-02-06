@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div style="display: flex; justify-content: flex-end; margin: 50px;">
+        {% if user == "None" %}
+            <div>
+                <a href="{% url 'login' %}"> Login </a>        
+            </div>
+        {% else %}
+            <div style = "margin: 0px 10px;">
+                Welcome, {{ user }}!
+            </div>
+            <div>
+                <a href="{% url 'logout' %}"> Logout </a>        
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="margin: 50px;">
+        <h1>Events</h1> 
+        <div style="display: flex;">
+            {% for event in events %}
+                <div style="padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">
+                    <strong> {{ event.name }} </strong>
+                    <div>
+                        <a href="{% url 'event' event_id=event.id %}">Click here</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    &nbsp;
+    
+    {% if user != "None" %}
+    <div style="margin: 50px;">
+        <h1>Recommendations</h1> 
+        <div style="display: flex;">
+            {% for event in recomms %}
+            <div style="padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">
+                <strong> {{ event.name }} </strong>
+                <div>
+                    <a href="{{ event.link }}">Click here</a>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

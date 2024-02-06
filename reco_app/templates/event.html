@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div style="display: flex; justify-content: flex-end; margin: 20px;">
+        {% if user == "None" %}
+            <div>
+                <a href="{% url 'login' %}"> Login </a>        
+            </div>
+        {% else %}
+            <div style = "margin: 0px 10px;">
+                Welcome, {{ user }}!
+            </div>
+            <div>
+                <a href="{% url 'logout' %}"> Logout </a>        
+            </div>
+        {% endif %}
+    </div>
+
+    <div style="margin: 100px; display:flex;">
+        <div style="width: 100%;">
+            <h1> {{event.name}} </h1>
+            <div>
+                {{ event.start_datetime }} to {{ event.end_datetime }}
+            </div>
+        </div>
+
+        <div style="width: 100%; display: flex; justify-content: center;">
+            {% if registered_status %}
+                <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
+                    You've registered!
+                </div>
+            {% else %}
+                <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
+                    <div style="padding: 20px 20px; background-color: red; border-radius: 5px;">
+                        {% if user == "None" %}
+                            <a href = "{% url 'login' %}" style="color: white;"> Register </a>
+                        {% else %}
+                            <a href = "{% url 'event_reg' event_id=event.id %}" style="color: white;"> Register </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="margin: 100px;">
+        <h2> Location </h2>
+        <div>
+            {{ event.location }}
+        </div>
+    </div>
+
+    <div style="margin: 100px;">
+        <h2> About this event </h2>
+        <div>
+            {{ event.description }}
+        </div>
+    </div>  
+
+    <div style="margin: 100px;">
+        <h2> Official Website </h2>
+        <div>
+            {{ event.link }}
+        </div>
+    </div>
+
+{% endblock %}
