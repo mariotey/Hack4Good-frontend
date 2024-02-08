@@ -44,9 +44,9 @@
         <div style="display: flex;">
             {% for event in recomms %}
             <div style="padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">
-                <strong> {{ event.name }} </strong>
+                <strong> {{ event }} </strong>
                 <div>
-                    <a href="{{ event.link }}">Click here</a>
+                    <a href="{% url 'event' event_title=event %}">Click here</a>
                 </div>
             </div>
         {% endfor %}

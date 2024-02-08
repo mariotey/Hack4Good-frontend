@@ -15,27 +15,21 @@ def index(request):
 
     if cookie_user == "None":
         admin_status = False
+        recomms = []
     else:
         admin_status = requests.get(
             f"{FASTAPI_BASE_URL}/user/is_admin", 
             params={"email": cookie_user}
         ).json()["is_admin"]
 
+        recomms = requests.get(
+            f"{FASTAPI_BASE_URL}/user/get_similar_events", 
+            params={"email": cookie_user}
+        ).json()["top_5_events"]
+
     events = requests.get(
         f"{FASTAPI_BASE_URL}/event/get_events", 
     ).json()["event_titles"]
-
-    recomms = [
-        {
-           "name": "Disneyland Hongkong",
-            "id": 1,
-            "description": "fhjgfdsjgfdg;olfdgkzngbjkrgluirzdgiuhzfgnodfzg;ldfzgo;",
-            "location": "HarbourFront MRT",
-            "start_datetime": datetime(2022, 1, 1, 12, 30, 0),
-            "end_datetime": datetime(2022, 1, 2, 12, 30, 0),
-            "link": "https://www.hongkongdisneyland.com/?located=true"
-        }
-    ]
 
     return render(request, 'index.html', {
         "user_email": cookie_user,
@@ -191,7 +185,7 @@ def event_reg(request, event_id):
     Registration Mechanism for Event Page, TBC
     """
     
-    cookie_user = request.COOKIES.get("user", "None")
+    cookie_user = request.COOKIES.get("user_email", "None")
 
     event = {
        "name": "Disneyland Hongkong",
@@ -204,7 +198,7 @@ def event_reg(request, event_id):
     }
 
     return render(request, 'event.html', {
-        "user": cookie_user,
+        "user_email": cookie_user,
         "event": event,
         "registered_status": True
     })
