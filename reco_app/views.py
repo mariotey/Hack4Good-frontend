@@ -168,25 +168,20 @@ def create_event(request):
     else:
         return render(request, 'createEvent.html')
   
-def event(request, event_id):
+def event(request, event_title):
     """
     Navigates to Event Page
     """
     
-    cookie_user = request.COOKIES.get("user", "None")
+    cookie_user = request.COOKIES.get("user_email", "None")
 
-    event = {
-        "name": "Disneyland Hongkong",
-        "id": 1,
-        "description": "fhjgfdsjgfdg;olfdgkzngbjkrgluirzdgiuhzfgnodfzg;ldfzgo;",
-        "location": "HarbourFront MRT",
-        "start_datetime": datetime(2022, 1, 1, 12, 30, 0),
-        "end_datetime": datetime(2022, 1, 2, 12, 30, 0),
-        "link": "https://www.hongkongdisneyland.com/?located=true"
-    }
+    event = requests.get(
+        f"{FASTAPI_BASE_URL}/event/get_event", 
+        params={"title":event_title}
+    ).json()
 
     return render(request, 'event.html', {
-        "user": cookie_user,
+        "user_email": cookie_user,
         "event": event,
         "registered_status": False
     })

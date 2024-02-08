@@ -18,29 +18,39 @@
 
     <div style="margin: 100px; display:flex;">
         <div style="width: 100%;">
-            <h1> {{event.name}} </h1>
+            <h1> {{event.title}} </h1>
             <div>
-                {{ event.start_datetime }} to {{ event.end_datetime }}
+                {{ event.date }}, {{event.time}}
+            </div>
+            <div>
+                Deadline: {{event.deadline}}
             </div>
         </div>
 
-        <div style="width: 100%; display: flex; justify-content: center;">
-            {% if registered_status %}
-                <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
-                    You've registered!
-                </div>
-            {% else %}
-                <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
-                    <div style="padding: 20px 20px; background-color: red; border-radius: 5px;">
-                        {% if user == "None" %}
-                            <a href = "{% url 'login' %}" style="color: white;"> Register </a>
-                        {% else %}
-                            <a href = "{% url 'event_reg' event_id=event.id %}" style="color: white;"> Register </a>
-                        {% endif %}
+        
+        <div style="width: 100%; justify-content: center;">
+            <div style="text-align: center;">
+                Capacity: {{event.capacity}}
+            </div>
+            <div style="display: flex; justify-content: center;">
+                {% if registered_status %}
+                    <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
+                        You've registered!
                     </div>
-                </div>
-            {% endif %}
+                {% else %}
+                    <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
+                        <div style="padding: 20px 20px; background-color: red; border-radius: 5px;">
+                            {% if user == "None" %}
+                                <a href = "{% url 'login' %}" style="color: white;"> Register </a>
+                            {% else %}
+                                <a style="color: white;"> Register </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
         </div>
+
     </div>
 
     <div style="margin: 100px;">
@@ -55,13 +65,13 @@
         <div>
             {{ event.description }}
         </div>
-    </div>  
+    </div> 
 
     <div style="margin: 100px;">
-        <h2> Official Website </h2>
+        <h2> Requirements </h2>
         <div>
-            {{ event.link }}
+            {{event.requirements}}
         </div>
-    </div>
+    </div> 
 
 {% endblock %}
