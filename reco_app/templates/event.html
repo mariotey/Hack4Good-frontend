@@ -2,7 +2,7 @@
 
 {% block body %}
     <div style="display: flex; justify-content: flex-end; margin: 20px;">
-        {% if user == "None" %}
+        {% if user_email == "None" %}
             <div>
                 <a href="{% url 'login' %}"> Login </a>        
             </div>
