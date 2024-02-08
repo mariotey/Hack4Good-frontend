@@ -2,16 +2,22 @@
 
 {% block body %}
     <div style="display: flex; justify-content: flex-end; margin: 50px;">
-        {% if user == "None" %}
+        {% if admin_status %}
             <div>
-                <a href="{% url 'login' %}"> Login </a>        
+                <a href="{% url 'create_event' %}"> Create Event </a>
             </div>
-        {% else %}
+        {% endif %}
+        
+        {% if user_email != "None" %}   
             <div style = "margin: 0px 10px;">
-                Welcome, {{ user }}!
+                Welcome, {{ user_email }}!
             </div>
             <div>
                 <a href="{% url 'logout' %}"> Logout </a>        
+            </div>
+        {% else %}
+            <div>
+                <a href="{% url 'login' %}"> Login </a>        
             </div>
         {% endif %}
     </div>
@@ -20,10 +26,10 @@
         <h1>Events</h1> 
         <div style="display: flex;">
             {% for event in events %}
-                <div style="padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">
-                    <strong> {{ event.name }} </strong>
+                <div style="width: 200px; padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">
+                    <strong> {{ event }} </strong>
                     <div>
-                        <a href="{% url 'event' event_id=event.id %}">Click here</a>
+                        <a>Click here</a>
                     </div>
                 </div>
             {% endfor %}
@@ -32,7 +38,7 @@
 
     &nbsp;
     
-    {% if user != "None" %}
+    {% if user_email != "None" %}
     <div style="margin: 50px;">
         <h1>Recommendations</h1> 
         <div style="display: flex;">
