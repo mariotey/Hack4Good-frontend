@@ -17,10 +17,10 @@ def index(request):
     if cookie_user == "None":
         admin_status = False
     else:
-        admin_status = requests.post(
+        admin_status = requests.get(
             f"{FASTAPI_BASE_URL}/user/is_admin", 
-            json=cookie_user
-        ).json()
+            params={"email": cookie_user}
+        ).json()["is_admin"]
 
     events = requests.get(
         f"{FASTAPI_BASE_URL}/event/get_events", 
