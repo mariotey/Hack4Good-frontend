@@ -5,7 +5,6 @@ from django.shortcuts import render
 from django.urls import reverse
 import requests
 
-from .models import User
 from datetime import datetime
 
 FASTAPI_BASE_URL = "http://localhost:8000"

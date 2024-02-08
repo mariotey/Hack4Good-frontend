@@ -19,36 +19,56 @@
         <div class="form-group">
             <input class="form-control" autofocus type="text" name="full_name" placeholder="Full Name">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="email" name="email" placeholder="Email Address">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="password" name="password" placeholder="Password">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="number" name="age" placeholder="Age">
         </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="gender" placeholder="Gender">
-        </div>
+
+        <select name="gender">
+            <option value="" disabled selected>Gender</option>
+            <option value="m">Male</option>
+            <option value="f">Female</option>
+        </select>
+
         <div class="form-group">
             <input class="form-control" type="text" name="phone_number" placeholder="Phone Number">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="work_status" placeholder="Work Status">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="immigration_status" placeholder="Immigration Status">
-        </div>
+        </div>  
+
+        <select name="work_status">
+            <option value="" disabled selected>Work Status</option>
+            <option value="student">Student</option>
+            <option value="employed">Employed</option>
+            <option value="unemployed">Unemployed</option>
+        </select>
+
+        <select name="immigration_status">
+            <option value="" disabled selected>Immigration Status</option>
+            <option value="citizen">Citizen</option>
+            <option value="pr">PR</option>
+            <option value="student visa">Student Visa</option>
+            <option value="other">Other</option>
+        </select>
+
         <div class="form-group">
             <input class="form-control" type="text" name="skills" placeholder="Skills">
         </div>
+
         <div class="form-group">
             <input class="form-control" type="text" name="interests" placeholder="Interests">
         </div>
+        
         <div class="form-group">
             <input class="form-control" type="text" name="past_volunteer_experience" placeholder="Past Volunteer Experience">
         </div>

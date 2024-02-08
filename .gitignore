@@ -12,3 +12,5 @@ venv/
 # Ignore migrations and database
 migrations/
 *.db
+
+db.sqlite3
