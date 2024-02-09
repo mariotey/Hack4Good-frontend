@@ -224,7 +224,44 @@ def event(request, event_title):
     })
 
 def event_edit(request, event_title):
-    pass
+    user_email = request.COOKIES.get("user_email", "None")
+    username = request.COOKIES.get("username", "None")
+
+    if request.method == "POST":
+        updated_event = {
+            "email": user_email,
+            "title": event_title,
+            "date": request.POST["date"],
+            "time": request.POST["time"],
+            "requirements": request.POST["requirements"],
+            "capacity": int(request.POST["capacity"]),
+            "deadline": request.POST["deadline"],
+            "location": request.POST["location"],
+            "description": request.POST["description"],
+            "tasks": request.POST["tasks"]
+        }
+
+        print(updated_event)
+
+        fastapi_response = requests.post(
+                                f"{FASTAPI_BASE_URL}/event/update_event", 
+                                json=updated_event
+                            ).json()
+        
+        print(fastapi_response["message"])
+        
+        response = HttpResponseRedirect(reverse("index"))
+        return response
+    
+    else:
+        return render(request, 'event_edit.html', {
+            "username": username,
+            "user_email": user_email,
+            "event_details": requests.get(
+                                f"{FASTAPI_BASE_URL}/event/get_event", 
+                                params={"title":event_title}
+                            ).json(),
+        })
 
 def event_delete(request, event_title):
     
@@ -314,7 +351,7 @@ def user_edit(request, user_email):
 
     if request.method == "POST":
         update_data = {
-            "email": request.POST["email"],
+            "email": user_email,
             "full_name": request.POST["full_name"],
             # "password": request.POST["password"],
             "age": int(request.POST["age"]),

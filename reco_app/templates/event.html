@@ -33,7 +33,7 @@
 
             {% if user_admin %}
                 <div style = "display: flex;">
-                    <a style = "padding: 20px;"> Edit </a>
+                    <a style = "padding: 20px;" href="{% url 'event_edit' event_title=event.title %}"> Edit </a>
                     <a style = "padding: 20px;" href="{% url 'event_delete' event_title=event.title %}"> Delete </a>
                 </div>
             {% endif %}
