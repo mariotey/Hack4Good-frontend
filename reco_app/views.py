@@ -16,6 +16,7 @@ def index(request):
     if user_email == "None":
         admin_status = False
         recomms = []
+        registered = []
         username = "None"
     else:
         admin_status = requests.get(
@@ -27,6 +28,11 @@ def index(request):
             f"{FASTAPI_BASE_URL}/user/get_similar_events", 
             params={"email": user_email}
         ).json()["top_5_events"]
+
+        registered = requests.get(
+            f"{FASTAPI_BASE_URL}/user/get_user_events", 
+            params={"email": user_email}
+        ).json()["events_registered"]
 
         username = requests.get(
             f"{FASTAPI_BASE_URL}/user/get_user", 
@@ -40,6 +46,7 @@ def index(request):
         "events": requests.get(
                         f"{FASTAPI_BASE_URL}/event/get_events", 
                     ).json()["event_titles"],
+        "registered": registered,
         "recomms": recomms,
     })
 
@@ -247,7 +254,7 @@ def user_edit(request, user_email):
         update_data = {
             "email": request.POST["email"],
             "full_name": request.POST["full_name"],
-            "password": request.POST["password"],
+            # "password": request.POST["password"],
             "age": int(request.POST["age"]),
             "gender": request.POST["gender"],
             "phone_number": request.POST["phone_number"],
@@ -257,6 +264,8 @@ def user_edit(request, user_email):
             "interests": request.POST["interests"],
             "past_volunteer_experience": request.POST["past_volunteer_experience"],
         }
+        
+        ## Update API request
 
         response = HttpResponseRedirect(reverse("get_user"))
         response.set_cookie("user_email", request.POST["email"], max_age=3600)
@@ -273,3 +282,18 @@ def user_edit(request, user_email):
             "user_email": user_email,
             "user_details": user_details,
         })
+    
+def user_delete(request, user_email):
+
+    fastapi_response = requests.post(
+        f"{FASTAPI_BASE_URL}/user/delete_user", 
+        json={'email': str(user_email)}
+    ).json()
+    
+    response = HttpResponseRedirect(reverse("index"))
+    response.delete_cookie("user_email")
+    response.delete_cookie("username")
+
+    print(f"\n{fastapi_response['message']}\n")
+
+    return response

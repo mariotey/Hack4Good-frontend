@@ -23,8 +23,8 @@
             <h1> {{user_details.full_name}} </h1>
             {% if user_details.email == user_email %}
             <div>
-                <a href = "{% url 'user_edit' user_email=user_email %}"> Edit Profile </a>
-                <a> Delete </a>
+                <a href = "{% url 'user_edit' user_email=user_email %}"> Edit </a>
+                <a href = "{% url 'user_delete' user_email=user_email %}"> Delete </a>
             </div>
             {% endif %}
 
