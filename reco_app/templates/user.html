@@ -22,10 +22,10 @@
         <div style="width: 100%;">
             <h1> {{user_details.full_name}} </h1>
             {% if user_details.email == user_email %}
-            <div>
-                <a href = "{% url 'user_edit' user_email=user_email %}"> Edit </a>
-                <a href = "{% url 'user_delete' user_email=user_email %}"> Delete </a>
-            </div>
+                <div>
+                    <a href = "{% url 'user_edit' user_email=user_email %}"> Edit </a>
+                    <a href = "{% url 'user_delete' user_email=user_email %}"> Delete </a>
+                </div>
             {% endif %}
 
             <div>
@@ -64,9 +64,12 @@
                 <div style="text-align: center;">
                     Admin Rights
                 </div>
-                <div style="display: flex; justify-content: center;">
-                    <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
-                        Admin buttons
+                <div>
+                    <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; justify-content: center; display: flex; align-items: center; ">
+                        <a href="{% url 'admin_promote' user_email=user_details.email %}">Promote to Admin</a>
+                    </div>
+                    <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; justify-content: center; display: flex; align-items: center; ">
+                        <a href="{% url 'admin_demote' user_email=user_details.email %}">Demote from Admin</a>
                     </div>
                 </div>
             </div>

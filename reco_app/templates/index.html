@@ -44,7 +44,9 @@
         <h1> Registered Events </h1>
         <div style="display: flex;"></div>
             {% if registered|length == 0 %}
-                <div> You have not registered any Events!</div>
+                <div style="padding: 20px; margin: 20px;"> 
+                    You have not registered any Events!
+                </div>
             {% else %}
                 {% for event in registered %}
                     <div style="width: 200px; padding: 20px; margin: 20px; border-radius: 5px; border: solid black 1px;">

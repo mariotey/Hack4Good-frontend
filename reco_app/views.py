@@ -9,7 +9,8 @@ from datetime import datetime
 
 FASTAPI_BASE_URL = "http://localhost:8000"
 
-# Create your views here.
+#################################################################################################
+
 def index(request):
     user_email = request.COOKIES.get("user_email", "None")
 
@@ -53,6 +54,8 @@ def index(request):
     response.set_cookie("username", username, max_age=3600)
 
     return response
+
+#################################################################################################
 
 def login_view(request):
     if request.method == "POST":
@@ -141,6 +144,8 @@ def register(request):
     else:
         return render(request, "register.html")
 
+#################################################################################################
+    
 def create_event(request):
     """
     Navigates to Event Creation page
@@ -184,46 +189,104 @@ def event(request, event_title):
     Navigates to Event Page
     """
     
-    cookie_user = request.COOKIES.get("user_email", "None")
+    user_email = request.COOKIES.get("user_email", "None")
     username = request.COOKIES.get("username", "None")
 
-    event = requests.get(
-        f"{FASTAPI_BASE_URL}/event/get_event", 
-        params={"title":event_title}
-    ).json()
+    registered_events = requests.get(
+        f"{FASTAPI_BASE_URL}/user/get_user_events", 
+        params={"email": user_email}
+    ).json()["events_registered"]
+
+    if event_title not in registered_events:
+        register_status = False
+    else:
+        register_status = True
 
     return render(request, 'event.html', {
         "username": username,
-        "user_email": cookie_user,
-        "event": event,
-        "registered_status": False
+        "user_email": user_email,
+        "user_admin": requests.get(
+                        f"{FASTAPI_BASE_URL}/user/is_admin", 
+                        params={"email": user_email}
+                    ).json()["is_admin"],
+        "event": requests.get(
+                    f"{FASTAPI_BASE_URL}/event/get_event", 
+                    params={"title":event_title}
+                ).json(),
+        "participants": requests.post(
+                            f"{FASTAPI_BASE_URL}/event/get_users_registered", 
+                            json={
+                                "email": user_email,
+                                "title": event_title
+                            }
+                        ).json()["users_registered"],
+        "registered_status": register_status,
     })
 
-def event_reg(request, event_id):
+def event_edit(request, event_title):
+    pass
+
+def event_delete(request, event_title):
+    
+    admin_email = request.COOKIES.get("user_email", "None")
+
+    fastapi_response = requests.post(
+                            f"{FASTAPI_BASE_URL}/event/delete_event", 
+                            json={
+                                "email": admin_email,
+                                "title": event_title
+                            }
+                        ).json()
+    
+    print(fastapi_response["message"])
+
+    response = HttpResponseRedirect(reverse("index"))
+    return response
+
+def event_reg(request, event_title):
     """
     Registration Mechanism for Event Page, TBC
     """
-    
-    cookie_user = request.COOKIES.get("user_email", "None")
 
-    event = {
-       "name": "Disneyland Hongkong",
-        "id": 1,
-        "description": "fhjgfdsjgfdg;olfdgkzngbjkrgluirzdgiuhzfgnodfzg;ldfzgo;",
-        "location": "HarbourFront MRT",
-        "start_datetime": datetime(2022, 1, 1, 12, 30, 0),
-        "end_datetime": datetime(2022, 1, 2, 12, 30, 0),
-        "link": "https://www.hongkongdisneyland.com/?located=true"
-    }
+    user_email = request.COOKIES.get("user_email", "None")
+    username = request.COOKIES.get("username", "None")
+
+    print(user_email, event_title)
+
+    register_event_status  = requests.post(
+                                f"{FASTAPI_BASE_URL}/event/register_event", 
+                                json={
+                                    "email": user_email,
+                                    "title": event_title
+                                }
+                            ).json()
+    
+    print(register_event_status["message"])
 
     return render(request, 'event.html', {
-        "user_email": cookie_user,
-        "event": event,
-        "registered_status": True
+        "username": username,
+        "user_email": user_email,
+        "user_admin": requests.get(
+                        f"{FASTAPI_BASE_URL}/user/is_admin", 
+                        params={"email": user_email}
+                    ).json()["is_admin"],
+        "event": requests.get(
+                    f"{FASTAPI_BASE_URL}/event/get_event", 
+                    params={"title":event_title}
+                ).json(),
+        "participants": requests.post(
+                            f"{FASTAPI_BASE_URL}/event/get_users_registered", 
+                            json={
+                                "email": user_email,
+                                "title": event_title
+                            }
+                        ).json()["users_registered"],
+        "registered_status": register_event_status,
     })
 
+#################################################################################################
+
 def get_user(request, user_email):
-    user_email = request.COOKIES.get("user_email", "None")
     username = request.COOKIES.get("username", "None")
     
     user_details = requests.get(
@@ -231,12 +294,12 @@ def get_user(request, user_email):
         params={"email": user_email}
     ).json()
 
+    user_email = request.COOKIES.get("user_email", "None")
+
     user_admin  = requests.get(
         f"{FASTAPI_BASE_URL}/user/is_admin", 
         params={"email": user_email}
     ).json()["is_admin"]
-
-    print(user_admin)
 
     return render(request, 'user.html', {
         "username": username,
@@ -244,7 +307,6 @@ def get_user(request, user_email):
         "user_details": user_details,
         "user_admin": user_admin,
     })
-
 
 def user_edit(request, user_email):
     user_email = request.COOKIES.get("user_email", "None")
@@ -297,3 +359,45 @@ def user_delete(request, user_email):
     print(f"\n{fastapi_response['message']}\n")
 
     return response
+
+#################################################################################################
+
+def admin_promote(request, user_email):
+    
+    admin_email = request.COOKIES.get("user_email", "None")
+
+    fastapi_response = requests.post(
+                            f"{FASTAPI_BASE_URL}/user/promote_admin", 
+                            json={
+                                "curr_user_email": admin_email,
+                                "new_user_email": user_email
+                            }
+                        ).json()
+
+    print(fastapi_response["message"])
+
+    response = HttpResponseRedirect(reverse("index"))
+    return response
+
+def admin_demote(request, user_email):
+
+    admin_email = request.COOKIES.get("user_email", "None")
+
+    fastapi_response = requests.post(
+                            f"{FASTAPI_BASE_URL}/user/demote_admin", 
+                            json={
+                                "curr_user_email": admin_email,
+                                "new_user_email": user_email
+                            }
+                        ).json()
+
+    print(fastapi_response["message"])
+
+    response = HttpResponseRedirect(reverse("index"))
+    return response
+
+#################################################################################################
+
+
+
+    
