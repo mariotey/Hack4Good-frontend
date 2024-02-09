@@ -8,9 +8,9 @@
             </div>
         {% endif %}
         
-        {% if user_email != "None" %}   
+        {% if username != "None" %}   
             <div style = "margin: 0px 10px;">
-                Welcome, {{ user_email }}!
+                Welcome, {{ username }}!
             </div>
             <div>
                 <a href="{% url 'logout' %}"> Logout </a>        
@@ -38,7 +38,7 @@
 
     &nbsp;
     
-    {% if user_email != "None" %}
+    {% if username != "None" %}
     <div style="margin: 50px;">
         <h1>Recommendations</h1> 
         <div style="display: flex;">

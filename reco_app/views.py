@@ -11,32 +11,41 @@ FASTAPI_BASE_URL = "http://localhost:8000"
 
 # Create your views here.
 def index(request):
-    cookie_user = request.COOKIES.get("user_email", "None")
+    user_email = request.COOKIES.get("user_email", "None")
 
-    if cookie_user == "None":
+    if user_email == "None":
         admin_status = False
         recomms = []
+        username = "None"
     else:
         admin_status = requests.get(
             f"{FASTAPI_BASE_URL}/user/is_admin", 
-            params={"email": cookie_user}
+            params={"email": user_email}
         ).json()["is_admin"]
 
         recomms = requests.get(
             f"{FASTAPI_BASE_URL}/user/get_similar_events", 
-            params={"email": cookie_user}
+            params={"email": user_email}
         ).json()["top_5_events"]
 
-    events = requests.get(
-        f"{FASTAPI_BASE_URL}/event/get_events", 
-    ).json()["event_titles"]
+        username = requests.get(
+            f"{FASTAPI_BASE_URL}/user/get_user", 
+            params={"email": user_email}
+        ).json()["full_name"]
 
-    return render(request, 'index.html', {
-        "user_email": cookie_user,
+    response = render(request, "index.html",{
+        "username": username,
+        "user_email": user_email,
         "admin_status": admin_status,
-        "events": events,
+        "events": requests.get(
+                        f"{FASTAPI_BASE_URL}/event/get_events", 
+                    ).json()["event_titles"],
         "recomms": recomms,
     })
+
+    response.set_cookie("username", username, max_age=3600)
+
+    return response
 
 def login_view(request):
     if request.method == "POST":
@@ -54,7 +63,7 @@ def login_view(request):
                 json=login_data
             ).json()
 
-            print(f"\n{fastapi_response["message"]}\n")
+            print(f"\n{fastapi_response['message']}\n")
 
             response = HttpResponseRedirect(reverse("index"))
             response.set_cookie("user_email", request.POST["email"], max_age=3600)
@@ -74,6 +83,7 @@ def logout_view(request):
 
     response = HttpResponseRedirect(reverse("index"))
     response.delete_cookie("user_email")
+    response.delete_cookie("username")
     return response
 
 def register(request):
@@ -104,7 +114,7 @@ def register(request):
                 json=register_data
             ).json()
 
-            print(f"\n{fastapi_response["message"]}\n")
+            print(f"\n{fastapi_response['message']}\n")
 
             response = HttpResponseRedirect(reverse("index"))
             response.set_cookie("user_email", request.POST["email"], max_age=3600)
@@ -168,6 +178,7 @@ def event(request, event_title):
     """
     
     cookie_user = request.COOKIES.get("user_email", "None")
+    username = request.COOKIES.get("username", "None")
 
     event = requests.get(
         f"{FASTAPI_BASE_URL}/event/get_event", 
@@ -175,6 +186,7 @@ def event(request, event_title):
     ).json()
 
     return render(request, 'event.html', {
+        "username": username,
         "user_email": cookie_user,
         "event": event,
         "registered_status": False
