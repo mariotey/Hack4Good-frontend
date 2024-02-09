@@ -1,0 +1,31 @@
+1. Let user click on their name at the top right to go to their profile page (use /user/get_user endpoint) (For this, I can adjust the login endpoint to send back the user's full name so you can display it on the page?)
+
+2. Instead of always calling /user/get_similar_events to generate the most similar events, aka the recommendations, have a button next to the word "Recommendations" and only once user clicks on that button do you get the recommendations and display them on the page (use /user/get_similar_events endpoint)
+
+3. Let user change any value inside their profile page and press a save button at the bottom of the page which sends to the backend all the values on the page (the same values you send when we register a user for the first time) (use /user/update_user endpoint)
+-> Their profile page should essentially just be the register page but with the values already filled in and instead of a register button, there is a save changes button
+
+4. Let user delete their account -> on your end it will log them out, on my end it will delete the user from the database (use /user/delete_user endpoint)
+
+5. Let ADMIN user update event -> have an update event button next to the create event -> user is led to a page where they input NAME of the event -> led to a page just like the create event page but the values are already filled in -> when they press save changes, it sends to the backend all the values on the page (use /event/update_event endpoint)
+
+6. Let ADMIN user delete event -> have a delete event button next to the update event -> user is led to a page where they input NAME of the event with a delete button under it -> when they press delete, it sends to the backend the NAME of the event (use /event/delete_event endpoint)
+
+7. For ADMIN users -> if user is an admin and they go to an event's page, they should also see the list of users who already registered for the event (use /event/get_users_registered endpoint)
+
+8. For ADMIN users -> from the list of users in step 6, let the admin click on a user's name to go to their profile page -> that page should look like the event page, just with the user info showcased (use /admin/get_user endpoint)
+
+9. For ADMIN users -> Now that an admin is on a specific user's page, have there be 3 buttons at the top right of the page: 
+    - "Promote to Admin" -> promotes this user to an admin (use /user/promote_admin endpoint)
+    - "Demote to User" -> demotes this user to a regular user (use /user/demote_admin endpoint)
+    - "Kick from Event" -> kicks this user from the event (use /admin/kick_user endpoint)
+
+10. Implement the register button using the /event/register_event endpoint
+
+11. Only for logged in users -> Add another section in the event page called "Tasks personalized for you" -> this will work the same way as step 2, so there is a button next to the title "Tasks personalized for you" and only once the user clicks on that button do you get the tasks via my endpoint and display them on the page (use /user/generate_tasks endpoint)
+ 
+12. If a user is registered for an event and they go to that event's page, they should see a "Unregister" button instead of a "Register" button -> this unregisters them (use /event/unregister_event endpoint and /user/is_registered endpoint)
+-> I added a new endpoint called /user/is_registered that takes in user_email and event_name and returns true if the user is registered for the event and false if they are not
+-> You need to pull the new changes from github
+
+13. On a user's home page, add a section between 'Events' and 'Recommendations' called 'Events you are registered for' -> this section should show all the events the user is registered for (use /user/get_user_events endpoint)
