@@ -10,7 +10,9 @@
         
         {% if username != "None" %}   
             <div style = "margin: 0px 10px;">
-                Welcome, {{ username }}!
+                Welcome, 
+                    <a href = "{% url 'user' user_email=user_email %}">{{ username }}</a>
+                !
             </div>
             <div>
                 <a href="{% url 'logout' %}"> Logout </a>        

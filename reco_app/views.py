@@ -214,3 +214,62 @@ def event_reg(request, event_id):
         "event": event,
         "registered_status": True
     })
+
+def get_user(request, user_email):
+    user_email = request.COOKIES.get("user_email", "None")
+    username = request.COOKIES.get("username", "None")
+    
+    user_details = requests.get(
+        f"{FASTAPI_BASE_URL}/user/get_user", 
+        params={"email": user_email}
+    ).json()
+
+    user_admin  = requests.get(
+        f"{FASTAPI_BASE_URL}/user/is_admin", 
+        params={"email": user_email}
+    ).json()["is_admin"]
+
+    print(user_admin)
+
+    return render(request, 'user.html', {
+        "username": username,
+        "user_email": user_email,
+        "user_details": user_details,
+        "user_admin": user_admin,
+    })
+
+
+def user_edit(request, user_email):
+    user_email = request.COOKIES.get("user_email", "None")
+    username = request.COOKIES.get("username", "None")
+
+    if request.method == "POST":
+        update_data = {
+            "email": request.POST["email"],
+            "full_name": request.POST["full_name"],
+            "password": request.POST["password"],
+            "age": int(request.POST["age"]),
+            "gender": request.POST["gender"],
+            "phone_number": request.POST["phone_number"],
+            "work_status": request.POST["work_status"],
+            "immigration_status": request.POST["immigration_status"],
+            "skills": request.POST["skills"],
+            "interests": request.POST["interests"],
+            "past_volunteer_experience": request.POST["past_volunteer_experience"],
+        }
+
+        response = HttpResponseRedirect(reverse("get_user"))
+        response.set_cookie("user_email", request.POST["email"], max_age=3600)
+        return response
+
+    else:
+        user_details = requests.get(
+            f"{FASTAPI_BASE_URL}/user/get_user", 
+            params={"email": user_email}
+        ).json()
+
+        return render(request, 'user_edit.html', {
+            "username": username,
+            "user_email": user_email,
+            "user_details": user_details,
+        })
