@@ -25,6 +25,9 @@
             <div>
                 Deadline: {{event.deadline}}
             </div>
+            <div>
+                Location: {{event.location}}
+            </div>
         </div>
 
         
@@ -54,16 +57,16 @@
     </div>
 
     <div style="margin: 100px;">
-        <h2> Location </h2>
-        <div>
-            {{ event.location }}
-        </div>
-    </div>
-
-    <div style="margin: 100px;">
-        <h2> About this event </h2>
+        <h2> Event Description </h2>
         <div>
             {{ event.description }}
+        </div>
+    </div> 
+
+    <div style="margin: 100px;">
+        <h2> Event Tasks </h2>
+        <div>
+            {{ event.tasks }}
         </div>
     </div> 
 

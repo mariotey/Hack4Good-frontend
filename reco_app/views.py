@@ -54,7 +54,7 @@ def login_view(request):
                 json=login_data
             ).json()
 
-            print(f"\n{fastapi_response["message"]}\n")
+            print(f'\n{fastapi_response["message"]}\n')
 
             response = HttpResponseRedirect(reverse("index"))
             response.set_cookie("user_email", request.POST["email"], max_age=3600)
@@ -104,7 +104,7 @@ def register(request):
                 json=register_data
             ).json()
 
-            print(f"\n{fastapi_response["message"]}\n")
+            print(f'\n{fastapi_response["message"]}\n')
 
             response = HttpResponseRedirect(reverse("index"))
             response.set_cookie("user_email", request.POST["email"], max_age=3600)
