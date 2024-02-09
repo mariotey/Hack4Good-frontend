@@ -39,23 +39,29 @@
             {% endif %}
         </div>
 
-      
-
         <div style="width: 100%; justify-content: center;">
             <div style="text-align: center;">
                 Capacity: {{ event.capacity }}
             </div>
-            <div style="text-align: center;"> Participants: {{participants}}</div>
+            {% if user_admin %}
+                <div style="text-align: center;"> Participants: {{participants}}</div>
+            {% endif %}
             <div style="display: flex; justify-content: center;">
                 {% if registered_status %}
                     <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
-                        You've registered!
+                        <div style="padding: 20px 20px; background-color: red; border-radius: 5px;">
+                            {% if username == "None" %}
+                                <a href = "{% url 'login' %}" style="color: white;"> Login </a>
+                            {% else %}
+                                <a href = "{% url 'event_reg' event_title=event.title %}" style="color: white;"> Unregister </a>
+                            {% endif %}
+                        </div>
                     </div>
                 {% else %}
                     <div style="padding: 20px 20px; border: 1px solid; border-radius: 5px; text-align: center; display: flex; align-items: center; ">
                         <div style="padding: 20px 20px; background-color: red; border-radius: 5px;">
-                            {% if user == "None" %}
-                                <a href = "{% url 'login' %}" style="color: white;"> Register </a>
+                            {% if username == "None" %}
+                                <a href = "{% url 'login' %}" style="color: white;"> Login </a>
                             {% else %}
                                 <a href = "{% url 'event_reg' event_title=event.title %}" style="color: white;"> Register </a>
                             {% endif %}
