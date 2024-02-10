@@ -197,29 +197,38 @@ def event(request, event_title):
         params={"email": user_email}
     ).json()["events_registered"]
 
+    print(registered_events)
+
     if event_title not in registered_events:
         register_status = False
     else:
         register_status = True
 
-    return render(request, 'event.html', {
-        "username": username,
-        "user_email": user_email,
-        "user_admin": requests.get(
-                        f"{FASTAPI_BASE_URL}/user/is_admin", 
-                        params={"email": user_email}
-                    ).json()["is_admin"],
-        "event": requests.get(
-                    f"{FASTAPI_BASE_URL}/event/get_event", 
-                    params={"title":event_title}
-                ).json(),
-        "participants": requests.post(
+    user_admin = requests.get(
+                    f"{FASTAPI_BASE_URL}/user/is_admin", 
+                    params={"email": user_email}
+                ).json()["is_admin"]
+    
+    if user_admin:
+        participants = requests.post(
                             f"{FASTAPI_BASE_URL}/event/get_users_registered", 
                             json={
                                 "email": user_email,
                                 "title": event_title
                             }
-                        ).json()["users_registered"],
+                        ).json()["users_registered"]
+    else:
+        participants = []
+
+    return render(request, 'event.html', {
+        "username": username,
+        "user_email": user_email,
+        "user_admin": user_admin,
+        "event": requests.get(
+                    f"{FASTAPI_BASE_URL}/event/get_event", 
+                    params={"title":event_title}
+                ).json(),
+        "participants": participants,
         "registered_status": register_status,
     })
 
@@ -300,24 +309,32 @@ def event_reg(request, event_title):
     
     print(register_event_status["message"])
 
-    return render(request, 'event.html', {
-        "username": username,
-        "user_email": user_email,
-        "user_admin": requests.get(
-                        f"{FASTAPI_BASE_URL}/user/is_admin", 
-                        params={"email": user_email}
-                    ).json()["is_admin"],
-        "event": requests.get(
-                    f"{FASTAPI_BASE_URL}/event/get_event", 
-                    params={"title":event_title}
-                ).json(),
-        "participants": requests.post(
+    user_admin = requests.get(
+                    f"{FASTAPI_BASE_URL}/user/is_admin", 
+                    params={"email": user_email}
+                ).json()["is_admin"]
+    
+    if user_admin:
+        participants = requests.post(
                             f"{FASTAPI_BASE_URL}/event/get_users_registered", 
                             json={
                                 "email": user_email,
                                 "title": event_title
                             }
-                        ).json()["users_registered"],
+                        ).json()["users_registered"]
+    else:
+        participants = []
+
+
+    return render(request, 'event.html', {
+        "username": username,
+        "user_email": user_email,
+        "user_admin": user_admin,
+        "event": requests.get(
+                    f"{FASTAPI_BASE_URL}/event/get_event", 
+                    params={"title":event_title}
+                ).json(),
+        "participants": participants,
         "registered_status": register_event_status,
     })
 

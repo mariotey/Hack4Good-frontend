@@ -40,11 +40,21 @@
         </div>
 
         <div style="width: 100%; justify-content: center;">
-            <div style="text-align: center;">
+            <div style="text-align: center; padding: 20px;">
                 Capacity: {{ event.capacity }}
             </div>
             {% if user_admin %}
-                <div style="text-align: center;"> Participants: {{participants}}</div>
+                <div style="text-align: center; padding: 20px;"> Participants:
+                    <div style="display: flex; justify-content: center;">    
+                        <ul>
+                            {% for participant in participants %}
+                            <li>
+                                <a href = "{% url 'user' user_email=participant %}"> {{participant}} </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             {% endif %}
             <div style="display: flex; justify-content: center;">
                 {% if registered_status %}
