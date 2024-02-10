@@ -292,7 +292,7 @@ def event_reg(request, event_title):
 
     register_event_status  = requests.post(
                                 f"{FASTAPI_BASE_URL}/event/register_event", 
-                                json={
+                                params={
                                     "email": str(user_email),
                                     "title": str(event_title),
                                 }
@@ -324,7 +324,7 @@ def event_reg(request, event_title):
 def event_unreg(request, event_title):
     fastapi_response  = requests.post(
                             f"{FASTAPI_BASE_URL}/event/unregister_event", 
-                            json={
+                            params={
                                 "email": str(request.COOKIES.get("user_email", "None")),
                                 "title": str(event_title)
                             }
@@ -367,7 +367,7 @@ def user_edit(request, user_email):
         updated_user = {
             "email": user_email,
             "full_name": request.POST["full_name"],
-            # "password": request.POST["password"],
+            "password": request.POST["password"],
             "age": int(request.POST["age"]),
             "gender": request.POST["gender"],
             "phone_number": request.POST["phone_number"],
@@ -378,10 +378,17 @@ def user_edit(request, user_email):
             "past_volunteer_experience": request.POST["past_volunteer_experience"],
         }
 
-        ## Update API request
+        print(updated_user)
 
-        response = HttpResponseRedirect(reverse("get_user"))
-        response.set_cookie("user_email", request.POST["email"], max_age=3600)
+        ## Update API request
+        fastapi_response = requests.post(
+            f"{FASTAPI_BASE_URL}/user/update_user", 
+            json=updated_user
+        ).json()
+
+        print(fastapi_response["message"])
+
+        response = HttpResponseRedirect(reverse("index"))
         return response
 
     else:
@@ -399,7 +406,7 @@ def user_edit(request, user_email):
 def user_delete(request, user_email):
     fastapi_response = requests.post(
         f"{FASTAPI_BASE_URL}/user/delete_user", 
-        json={'email': user_email}
+        params={'email': user_email}
     ).json()
     
     print(f"\n{fastapi_response['message']}\n")
@@ -446,7 +453,4 @@ def admin_demote(request, user_email):
     return response
 
 #################################################################################################
-
-
-
     

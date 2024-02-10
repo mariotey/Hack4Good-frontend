@@ -53,7 +53,7 @@
                             {% if username == "None" %}
                                 <a href = "{% url 'login' %}" style="color: white;"> Login </a>
                             {% else %}
-                                <a href = "{% url 'event_reg' event_title=event.title %}" style="color: white;"> Unregister </a>
+                                <a href = "{% url 'event_unreg' event_title=event.title %}" style="color: white;"> Unregister </a>
                             {% endif %}
                         </div>
                     </div>
